@@ -1,481 +1,603 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>مغامرة سيمزا الملونة</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#FFD1DC">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="مغامرة سيمزا الملونة">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشروع تخرج: تأثير وسائل التواصل الاجتماعي على الصحة النفسية</title>
+    <!-- خط جديد وجميل: Cairo، ليظهر بشكل أفضل -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js for beautiful charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            overflow: hidden;
-            overscroll-behavior: none;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-            background: linear-gradient(135deg, #FFD1DC, #CBAACB, #A29BFE);
+        /* ألوان جديدة وأنيقة يا سنودي، مع تحسينات للعرض */
+        :root {
+            --primary-color: #2E7D32; /* أخضر غامق ورايق للعنوان والعناصر الأساسية */
+            --secondary-color: #37474F; /* أزرق رمادي عميق للقوائم والفوتر */
+            --accent-color: #FFAB40; /* برتقالي دافئ للمسات الجمالية */
+            --text-color: #212121; /* نص داكن لقراءة أوضح */
+            --bg-color: #FBFBFB; /* خلفية بيضاء ناعمة جداً */
+            --card-bg: #FFFFFF; /* خلفية البطاقات بيضاء نقية */
+            --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.05); /* ظل خفيف للعناصر */
+            --shadow-medium: 0 6px 12px rgba(0, 0, 0, 0.08); /* ظل متوسط للعناصر الكبيرة */
+            --shadow-strong: 0 10px 20px rgba(0, 0, 0, 0.12); /* ظل قوي عند التحويم */
         }
+
         body {
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .game-container {
-            background-color: #ffffff;
-            border-radius: 2rem; /* حواف دائرية للحاوية */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 1.5rem;
-            text-align: center;
+            font-family: 'Cairo', sans-serif; /* استخدام خط Cairo الجديد */
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7; /* زيادة ارتفاع السطر لتحسين القراءة */
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            width: 95%; /* أخذ مساحة أكبر على الجوال */
-            max-width: 800px; /* أقصى عرض للشاشات الأكبر */
-            height: 95vh; /* أخذ مساحة أكبر لإحساس ملء الشاشة */
-            max-height: 800px; /* تحديد أقصى ارتفاع للشاشات الطويلة جداً */
-            min-height: 500px; /* الحد الأدنى للارتفاع للأجهزة الأصغر */
-            position: relative; /* لتحديد المواقع المطلقة للشاشات */
-            overflow: hidden; /* التأكد من عدم خروج أي شيء */
-        }
-        canvas {
-            background-color: #F8F0FC; /* خلفية بنفسجية فاتحة جداً للوحة الرسم */
-            border-radius: 1.5rem; /* حواف دائرية للوحة الرسم */
-            display: block;
-            width: 100%;
-            /* الارتفاع سيتم ضبطه بواسطة JavaScript لضمان عدم وجود قص */
-            height: 100%; /* ارتفاع مبدئي، سيتم تعديله بواسطة JS */
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
-            cursor: none; /* إخفاء مؤشر الفأرة الافتراضي */
-            touch-action: none; /* منع إجراءات اللمس الافتراضية مثل التمرير/التكبير */
-        }
-        .game-info {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            padding: 0.5rem 0;
-            font-size: 1.25rem;
-            color: #6A5ACD; /* بنفسجي غامق */
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+            min-height: 100vh;
         }
 
-        /* أنماط الشاشات المشتركة (البداية ونهاية اللعبة) */
-        .app-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, #FADDE3, #FFEFD5); /* تدرج وردي فاتح إلى خوخي فاتح */
-            border-radius: 2rem; /* مطابقة لحواف game-container لتبدو كصفحة كاملة */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 200; /* مؤشر z أعلى لتغطية اللعبة */
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-            opacity: 1;
-            visibility: visible;
-            padding: 1.5rem; /* زيادة المساحة الداخلية للمحتوى */
-            text-align: center;
-            box-sizing: border-box; /* تضمين المساحة الداخلية في العرض/الارتفاع */
-        }
-        .app-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none; /* تعطيل التفاعل عندما تكون مخفية */
-            /* سيتم تعيين display: none بواسطة JS بعد الانتقال */
-        }
-        .app-screen h2 {
-            font-size: 2.8rem; /* عنوان كبير */
-            color: #8B008B; /* بنفسجي أغمق */
-            margin-bottom: 1rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-            line-height: 1.2;
-            padding: 0 1rem; /* إضافة مساحة داخلية لمنع القص على الشاشات الصغيرة */
-        }
-        .app-screen p {
-            font-size: 1.2rem;
-            color: #6A5ACD;
-            margin-bottom: 1.5rem;
-            max-width: 80%;
-            line-height: 1.6;
-            padding: 0 1rem; /* إضافة مساحة داخلية لمنع القص على الشاشات الصغيرة */
-        }
-        .app-screen .score-display {
-            font-size: 2.5rem;
-            color: #FF1493; /* وردي عميق للنتيجة */
-            font-weight: bolder;
-            margin-top: 1rem;
-            margin-bottom: 2rem;
-        }
-        .app-screen button {
-            background: linear-gradient(145deg, #EE82EE, #DA70D6); /* تدرج بنفسجي إلى أوركيد */
+        header {
+            background-color: var(--primary-color);
             color: white;
-            padding: 1.2rem 2.8rem; /* زر أكبر */
-            border-radius: 1.5rem; /* حواف زر أكثر دائرية */
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* ظل زر أقوى */
-        }
-        .app-screen button:hover {
-            background: linear-gradient(145deg, #DA70D6, #EE82EE); /* تدرج معكوس عند التحويم */
-            transform: translateY(-3px); /* رفع أكثر وضوحاً عند التحويم */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-        .app-screen button:active {
-            background: #CBAACB;
-            filter: brightness(0.95);
+            padding: 2rem 0; /* زيادة البادينج لجعل الهيدر أكثر بروزاً */
+            text-align: center;
+            box-shadow: var(--shadow-medium);
+            border-bottom-left-radius: 25px; /* زوايا دائرية أكثر نعومة */
+            border-bottom-right-radius: 25px;
+            position: relative; /* لإضافة خلفية زخرفية */
+            overflow: hidden; /* لإخفاء أي جزء زائد من الخلفية */
         }
 
-        /* شاشة التحميل الدوارة */
-        .loading-spinner {
+        /* إضافة نمط زخرفي للهيدر */
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: rotate(-30deg);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8rem; /* تكبير الخط للعنوان الرئيسي أكثر */
+            font-weight: 700;
+            letter-spacing: 1.5px; /* إضافة تباعد أكبر بين الحروف */
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            margin-top: 0.75rem;
+            font-size: 1.3rem; /* تكبير الخط قليلاً */
+            font-weight: 300;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1.2rem 0; /* زيادة البادينج للملاحة */
+            text-align: center;
+            border-radius: 15px; /* زوايا دائرية أكثر نعومة */
+            margin: 2rem auto; /* زيادة الهامش لجعلها منفصلة أكثر */
+            max-width: 95%; /* زيادة العرض للملاحة */
+            box-shadow: var(--shadow-medium);
+            position: sticky; /* جعل شريط التنقل ثابت */
+            top: 15px; /* يلتصق بـ 15 بكسل من الأعلى */
+            z-index: 1000; /* للتأكد من ظهوره فوق المحتوى الآخر */
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex; /* لجعله أفقيًا */
+            justify-content: center;
+            flex-wrap: wrap; /* للسماح بالعناصر بالانتقال إلى سطر جديد في الشاشات الصغيرة جداً */
+            flex-direction: row; /* التأكيد على أن الاتجاه أفقي بشكل افتراضي */
+        }
+
+        nav ul li {
+            margin: 0 20px; /* تعديل التباعد بين العناصر */
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 18px; /* زيادة البادينج لمنطقة الضغط */
+            border-radius: 12px; /* زوايا دائرية أكثر */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            display: block;
+            position: relative;
+            overflow: hidden; /* لإخفاء تأثير الفقاعة الزائد */
+        }
+
+        nav ul li a::before {
+            content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 300;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 1.5rem;
-            color: #6A5ACD;
-            font-weight: bold;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease;
-        }
-        .loading-spinner.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .spinner {
-            border: 8px solid #f3f3f3; /* رمادي فاتح */
-            border-top: 8px solid #EE82EE; /* وردي/بنفسجي */
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
+            transition: width 0.4s ease, height 0.4s ease, top 0.4s ease, left 0.4s ease;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+
+        nav ul li a:hover::before {
+            width: 300%;
+            height: 300%;
+            top: 0;
+            left: 0;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.25); /* تأثير تحويم أوضح */
+            transform: translateY(-5px) scale(1.03); /* تأثير حركة لطيف */
+            box-shadow: var(--shadow-light);
+        }
+
+        .container {
+            max-width: 1200px; /* زيادة أقصى عرض على الشاشات الكبيرة */
+            margin: 3rem auto; /* زيادة الهامش العلوي والسفلي */
+            padding: 0 2.5rem; /* زيادة البادينج الجانبي */
+            flex-grow: 1;
+        }
+
+        section {
+            background-color: var(--card-bg);
+            padding: 3rem; /* زيادة البادينج داخل الأقسام */
+            margin-bottom: 3rem;
+            border-radius: 25px; /* زوايا دائرية أكبر للقسم */
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden; /* لإخفاء أي جزء زائد من الخلفية */
+        }
+
+        /* إضافة تأثيرات خلفية خفيفة للأقسام */
+        section::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
             width: 60px;
             height: 60px;
-            animation: spin 1s linear infinite;
+            background: rgba(var(--primary-color), 0.05);
+            border-radius: 50%;
+        }
+        section::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            background: rgba(var(--accent-color), 0.05);
+            border-radius: 50%;
+        }
+
+        section h2 {
+            color: var(--primary-color);
+            font-size: 2.5rem; /* تكبير الخط للعناوين الفرعية أكثر */
+            margin-bottom: 2rem;
+            border-bottom: 4px solid var(--accent-color); /* خط سفلي أكثر سمكاً وبروزاً */
+            padding-bottom: 15px;
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        section p {
+            font-size: 1.15rem; /* تكبير خط الفقرات قليلاً */
+            line-height: 1.8; /* زيادة ارتفاع السطر للفقرات */
+            text-align: justify; /* محاذاة النص لكلا الجانبين */
+            margin-bottom: 1rem;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-height: 450px; /* زيادة ارتفاع الصورة أكثر */
+            object-fit: cover;
+            border-radius: 25px; /* زوايا دائرية أكبر */
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-medium);
+            transition: transform 0.4s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.01); /* تأثير تكبير خفيف عند التحويم */
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* زيادة الحد الأدنى لعرض البطاقة */
+            gap: 30px; /* زيادة الفجوة بين البطاقات */
+            margin-top: 3rem;
+        }
+
+        .card {
+            background-color: var(--bg-color);
+            padding: 2.2rem; /* زيادة البادينج داخل البطاقة */
+            border-radius: 20px; /* زوايا دائرية أكبر */
+            box-shadow: var(--shadow-light); /* ظل أنعم للبطاقات */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            border: 1px solid rgba(var(--primary-color), 0.1); /* إطار خفيف */
+        }
+
+        .card:hover {
+            transform: translateY(-10px); /* حركة أكثر وضوحاً عند التحويم */
+            box-shadow: var(--shadow-strong); /* ظل أعمق عند التحويم */
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem; /* تكبير الخط لعناوين البطاقات */
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .card .icon {
+            font-size: 2.5rem; /* تكبير أيقونات البطاقات */
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .icon {
+            transform: scale(1.1) rotate(5deg); /* تأثير حركة للأيقونات */
+        }
+
+        .button {
+            display: inline-flex; /* استخدام flex لتحسين محاذاة الأيقونات مع النص */
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 35px; /* زيادة حجم الزر */
+            border-radius: 12px; /* زوايا دائرية أكثر */
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            margin-top: 1.8rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* ظل أكثر قوة */
+            gap: 10px; /* المسافة بين النص والأيقونة */
+        }
+
+        .button:hover {
+            background-color: #388E3C; /* لون أغمق قليلاً عند التحويم */
+            transform: scale(1.08) translateY(-2px); /* تكبير أكبر وحركة بسيطة عند التحويم */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .button i {
+            font-size: 1.2em; /* حجم الأيقونة داخل الزر */
+        }
+
+        /* تنسيقات خاصة بالنتائج الرئيسية */
+        .results-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+        }
+
+        .results-list li {
+            background-color: var(--bg-color);
+            padding: 1.5rem 2rem; /* زيادة البادينج */
+            margin-bottom: 18px; /* زيادة الهامش بين العناصر */
+            border-radius: 15px; /* زوايا دائرية أكثر */
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: flex-start; /* محاذاة العناصر للأعلى */
+            gap: 25px;
+            font-size: 1.1rem; /* تكبير الخط قليلاً */
+            border: 1px solid rgba(var(--secondary-color), 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .results-list li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-list li strong {
+            color: var(--primary-color);
+            font-size: 1.25rem; /* تكبير الخط للنص القوي */
+        }
+
+        .results-list li .icon {
+            font-size: 2.2rem; /* تكبير حجم الأيقونات */
+            color: var(--accent-color);
+            margin-top: 5px; /* تعديل بسيط للمحاذاة */
+            flex-shrink: 0; /* لمنع الأيقونة من الانكماش */
+        }
+        
+        /* تنسيقات للتحليل الإحصائي التفاعلي */
+        .interactive-analysis {
+            background-color: var(--bg-color);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow-medium);
+            margin-top: 3rem;
+            border: 1px solid rgba(var(--primary-color), 0.1);
+        }
+
+        .interactive-analysis label {
+            display: block;
             margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 1.2rem; /* تكبير الخط لعنوان التحكم */
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        .interactive-analysis input[type="range"] {
+            width: 100%;
+            margin-bottom: 25px;
+            -webkit-appearance: none;
+            height: 12px; /* جعل شريط التمرير أكثر سمكاً */
+            background: linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) 50%, #E0E0E0 50%, #E0E0E0 100%); /* خلفية متدرجة تفاعلية */
+            border-radius: 6px;
+            outline: none;
+            transition: background 0.4s ease;
         }
-        ::-webkit-scrollbar { display: none; }
-        @media (max-width: 600px) {
-            .game-container {
-                width: 100vw;
-                height: 100dvh;
-                min-height: 100dvh;
-                max-width: 100vw;
-                border-radius: 0;
-                padding: 0;
+
+        .interactive-analysis input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px; /* تكبير مؤشر التمرير */
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: grab; /* تغيير المؤشر عند التحويم */
+            box-shadow: 0 0 0 5px rgba(46, 125, 50, 0.4); /* ظل دائري حول المؤشر */
+            transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .interactive-analysis input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.1); /* تأثير عند الضغط */
+        }
+
+        .interactive-analysis input[type="range"]::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: grab;
+            box-shadow: 0 0 0 5px rgba(46, 125, 50, 0.4);
+            transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        #analysisResult {
+            margin-top: 30px;
+            padding: 1.8rem; /* زيادة البادينج */
+            background-color: rgba(var(--primary-color), 0.1); /* خلفية أخف وأكثر شفافية */
+            border: 1px solid var(--primary-color);
+            border-radius: 15px;
+            font-weight: 500;
+            font-size: 1.15rem;
+            color: var(--text-color);
+            box-shadow: var(--shadow-light);
+        }
+
+        /* تنسيقات للرسوم البيانية */
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 400px; /* ارتفاع ثابت للرسم البياني */
+            width: 80%; /* عرض ثابت للرسم البياني */
+            max-width: 600px; /* أقصى عرض للرسم البياني */
+            margin-top: 30px;
+        }
+
+        /* تحسينات لخط الاتصال */
+        #contact .button {
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #contact .button i {
+            font-size: 1.1em;
+        }
+
+
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 2.2rem 0; /* زيادة البادينج للفوتر */
+            margin-top: 3.5rem; /* زيادة الهامش العلوي */
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            font-size: 1rem;
+            opacity: 0.95;
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* استجابة التصميم للشاشات الصغيرة والمتوسطة (الجوالات والأجهزة اللوحية) */
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 900px;
+                padding: 0 2rem;
             }
-            .app-screen {
-                border-radius: 0;
-                padding: 0.5rem;
+            header h1 {
+                font-size: 2.2rem;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-4 text-purple-700">مغامرة سيمزا الملونة ✨</h1>
-        <div class="game-info">
-            <span id="score" class="text-pink-600">النقاط: 0</span>
-            <span id="lives" class="text-purple-600">القلوب: 3</span>
-        </div>
-        <canvas id="gameCanvas"></canvas>
-
-        <!-- شاشة التحميل الدوارة -->
-        <div id="loadingSpinner" class="loading-spinner">
-            <div class="spinner"></div>
-            <span>جاري التحميل...</span>
-        </div>
-
-        <!-- شاشة البداية -->
-        <div id="startScreen" class="app-screen">
-            <h2>مرحباً يا أميرة القلوب! 💖💜</h2>
-            <p>انقري على الزر أدناه لتبدئي مغامرتك الشيقة في جمع القلوب اللامعة!</p>
-            <button id="startGameButton">ابدأ اللعبة</button>
-        </div>
-
-        <!-- شاشة نهاية اللعبة -->
-        <div id="gameOverScreen" class="app-screen hidden">
-            <h2>انتهت اللعبة! 💔</h2>
-            <p class="score-display">نقاطك: <span id="finalScore">0</span></p>
-            <button id="restartGameButton">العب مرة أخرى</button>
-        </div>
-    </div>
-
-    <script type="module">
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const scoreDisplay = document.getElementById('score');
-        const livesDisplay = document.getElementById('lives');
-        const startScreen = document.getElementById('startScreen');
-        const startGameButton = document.getElementById('startGameButton');
-        const gameOverScreen = document.getElementById('gameOverScreen');
-        const finalScoreDisplay = document.getElementById('finalScore');
-        const restartGameButton = document.getElementById('restartGameButton');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-
-        let score = 0;
-        let lives = 3; // عدد الأرواح الأولية
-        let hearts = []; // مصفوفة لتخزين كائنات القلوب المتساقطة
-        let catcher = {
-            x: canvas.width / 2,
-            y: canvas.height - 50, // تم ضبطه في resizeCanvas ليكون أعلى قليلاً
-            width: 60, // عرض أقل لزيادة الصعوبة
-            height: 40,  // ارتفاع السلة للرؤية
-            color: '#FF69B4', // وردي ساخن للسلة
-        };
-
-        // إعدادات اللعبة - تم تعديلها لزيادة الصعوبة القصوى
-        const HEART_SIZE = 30;
-        const HEART_SPEED = 4.5; // زيادة سرعة القلوب (كانت 4)
-        const HEART_SPAWN_INTERVAL = 500; // تقليل الفاصل الزمني لظهور المزيد من القلوب (كان 600)
-        let lastHeartSpawnTime = 0;
-        let animationFrameId; // لتخزين معرف requestAnimationFrame
-        let gameState = 'loading'; // حالات اللعبة المحتملة: 'loading', 'start', 'playing', 'gameOver'
-
-        // وظيفة لإظهار شاشة معينة
-        function showScreen(screenElement) {
-            // إخفاء جميع الشاشات الأخرى عن طريق جعلها شفافة وغير تفاعلية، ثم تعيين display:none
-            [startScreen, gameOverScreen, loadingSpinner].forEach(screen => {
-                if (screen !== screenElement) {
-                    screen.classList.add('hidden'); // تؤدي إلى انتقال الشفافية/الرؤية
-                    // بعد الانتقال، قم بتعيين display إلى none لإزالتها تمامًا من تدفق المستند
-                    if (screen.dataset.hideTimeoutId) clearTimeout(screen.dataset.hideTimeoutId);
-                    screen.dataset.hideTimeoutId = setTimeout(() => {
-                        screen.style.display = 'none';
-                        delete screen.dataset.hideTimeoutId;
-                    }, 500); // يتطابق هذا مع مدة انتقال CSS
-                }
-            });
-
-            // إظهار الشاشة المستهدفة عن طريق جعلها مرئية و display:flex
-            if (screenElement) {
-                screenElement.style.display = 'flex'; // تعيين display فورًا
-                // فرض إعادة تدفق/إعادة رسم لضمان تطبيق display:flex قبل إزالة 'hidden'
-                void screenElement.offsetWidth;
-                screenElement.classList.remove('hidden'); // تؤدي إلى انتقال الشفافية/الرؤية
+            header p {
+                font-size: 1.1rem;
             }
-        }
-
-        // إعادة تعيين حالة اللعبة
-        function resetGame() {
-            score = 0;
-            lives = 3;
-            hearts = [];
-            scoreDisplay.textContent = `النقاط: ${score}`;
-            livesDisplay.textContent = `القلوب: ${lives}`;
-            catcher.x = canvas.width / 2; // إعادة تعيين موضع السلة
-        }
-
-        // منطق بدء اللعبة
-        function startGame() {
-            resetGame();
-            showScreen(null); // إخفاء جميع الشاشات (الشاشات غير اللعبة)
-            gameState = 'playing';
-            gameLoop();
-        }
-
-        // منطق نهاية اللعبة
-        function gameOver() {
-            gameState = 'gameOver';
-            cancelAnimationFrame(animationFrameId); // إيقاف حلقة اللعبة
-            finalScoreDisplay.textContent = score;
-            showScreen(gameOverScreen);
-        }
-
-        // رسم شكل قلب
-        function drawHeart(x, y, size, color) {
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(x, y + size / 4);
-            ctx.bezierCurveTo(x + size / 2, y - size / 2, x + size, y, x, y + size);
-            ctx.bezierCurveTo(x - size, y, x - size / 2, y - size / 2, x, y + size / 4);
-            ctx.closePath();
-            ctx.fill();
-        }
-
-        // رسم السلة
-        function drawCatcher() {
-            ctx.fillStyle = catcher.color;
-            ctx.beginPath();
-            ctx.roundRect(catcher.x - catcher.width / 2, catcher.y, catcher.width, catcher.height, 10);
-            ctx.fill();
-            ctx.strokeStyle = '#8B008B';
-            ctx.lineWidth = 3;
-            ctx.stroke();
-        }
-
-        // إنشاء قلب جديد
-        function createHeart() {
-            const colors = ['#FFC0CB', '#DA70D6', '#BA55D3', '#C71585', '#FF1493', '#9370DB', '#8A2BE2']; // درجات الوردي والبنفسجي
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            const isGoodHeart = Math.random() < 0.5; // تقليل احتمالية القلب الجيد أكثر (كانت 0.6)
-
-            const heartColor = isGoodHeart ? randomColor : '#808080'; // رمادي للقلوب السيئة
-
-            hearts.push({
-                x: Math.random() * (canvas.width - HEART_SIZE),
-                y: -HEART_SIZE,
-                color: heartColor,
-                isGood: isGoodHeart,
-                size: HEART_SIZE
-            });
-        }
-
-        // تحديث حالة اللعبة
-        function update() {
-            for (let i = hearts.length - 1; i >= 0; i--) {
-                hearts[i].y += HEART_SPEED;
-
-                // الاصطدام بالسلة
-                if (hearts[i].y + hearts[i].size >= catcher.y &&
-                    hearts[i].x + hearts[i].size > catcher.x - catcher.width / 2 &&
-                    hearts[i].x < catcher.x + catcher.width / 2) {
-
-                    if (hearts[i].isGood) {
-                        score += 1;
-                    } else {
-                        lives -= 1; // خسارة حياة عند التقاط قلب سيء
-                    }
-                    scoreDisplay.textContent = `النقاط: ${score}`;
-                    livesDisplay.textContent = `القلوب: ${lives}`;
-                    hearts.splice(i, 1);
-
-                    if (lives <= 0) {
-                        gameOver();
-                        return; // إيقاف التحديث إذا انتهت اللعبة
-                    }
-                } else if (hearts[i].y > canvas.height) {
-                    // القلوب التي تخرج عن الشاشة (التي لم يتم التقاطها)
-                    // إذا كان قلباً جيداً وفُقد، لا يوجد عقوبة افتراضية حالياً.
-                    // إذا كان قلباً سيئاً وفُقد، لا يوجد عقوبة.
-                    hearts.splice(i, 1);
-                }
+            nav ul li {
+                margin: 0 15px;
             }
-
-            // إنشاء قلوب جديدة
-            const currentTime = Date.now();
-            if (currentTime - lastHeartSpawnTime > HEART_SPAWN_INTERVAL) {
-                createHeart();
-                lastHeartSpawnTime = currentTime;
+            section {
+                padding: 2.5rem;
+            }
+            section h2 {
+                font-size: 2rem;
+            }
+            .hero-image {
+                max-height: 350px;
+            }
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+            }
+            .card {
+                padding: 1.8rem;
+            }
+            .card h3 {
+                font-size: 1.5rem;
+            }
+            .results-list li {
+                padding: 1.2rem 1.5rem;
+                font-size: 1rem;
+                gap: 20px;
+            }
+            .results-list li .icon {
+                font-size: 1.8rem;
+            }
+            .interactive-analysis {
+                padding: 2.5rem;
+            }
+            .interactive-analysis label {
+                font-size: 1.1rem;
+            }
+            #analysisResult {
+                font-size: 1.05rem;
+            }
+            footer {
+                padding: 2rem 0;
+            }
+            .chart-container {
+                width: 90%; /* عرض أكبر للرسم البياني على الأجهزة اللوحية */
             }
         }
 
-        // رسم كل شيء
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // مسح اللوحة
-
-            hearts.forEach(heart => {
-                drawHeart(heart.x, heart.y, heart.size, heart.color);
-            });
-
-            drawCatcher();
-        }
-
-        // حلقة اللعبة
-        function gameLoop() {
-            if (gameState === 'playing') {
-                update();
-                draw();
-                animationFrameId = requestAnimationFrame(gameLoop);
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 1px;
             }
-        }
 
-        // التعامل مع حركة اللمس للسلة
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            if (gameState === 'playing') {
-                const rect = canvas.getBoundingClientRect();
-                catcher.x = Math.min(Math.max(e.touches[0].clientX - rect.left, catcher.width / 2), canvas.width - catcher.width / 2);
+            header p {
+                font-size: 0.9rem;
             }
-        });
 
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (gameState === 'playing') {
-                const rect = canvas.getBoundingClientRect();
-                catcher.x = Math.min(Math.max(e.touches[0].clientX - rect.left, catcher.width / 2), canvas.width - catcher.width / 2);
+            nav {
+                margin: 1.5rem auto;
+                padding: 1rem 0;
+                top: 10px; /* تعديل الشريط الثابت للجوال */
             }
-        });
-
-        // التعامل مع تغيير حجم لوحة الرسم
-        function resizeCanvas() {
-            const container = canvas.parentElement;
-            // استخدم window.innerWidth/Height للجوال لتفادي مشاكل الفراغات
-            let width = container.clientWidth;
-            let height = container.clientHeight;
-            if (window.innerWidth < 600) {
-                width = window.innerWidth;
-                height = window.innerHeight;
-                // دعم الأجهزة التي تدعم 100dvh
-                if (window.visualViewport) {
-                    height = window.visualViewport.height;
-                }
-            } else {
-                const containerStyle = getComputedStyle(container);
-                const containerPaddingTop = parseFloat(containerStyle.paddingTop);
-                const containerPaddingBottom = parseFloat(containerStyle.paddingBottom);
-                const containerPaddingLeft = parseFloat(containerStyle.paddingLeft);
-                const containerPaddingRight = parseFloat(containerStyle.paddingRight);
-                const gameInfoElement = document.querySelector('.game-info');
-                const gameInfoStyle = getComputedStyle(gameInfoElement);
-                const gameInfoHeight = gameInfoElement.offsetHeight;
-                const gameInfoMarginBottom = parseFloat(gameInfoStyle.marginBottom);
-                width = container.clientWidth - (containerPaddingLeft + containerPaddingRight);
-                const verticalSpaceTaken = containerPaddingTop + gameInfoHeight + gameInfoMarginBottom + containerPaddingBottom;
-                height = container.clientHeight - verticalSpaceTaken;
+            nav ul {
+                flex-direction: column; /* جعلها عمودية على الجوال */
+                gap: 10px;
             }
-            canvas.width = width;
-            canvas.height = height;
-            // Ensure catcher is visibly above the bottom of the canvas by a good margin
-            const catcherBottomOffset = 40;
-            catcher.y = canvas.height - catcher.height - catcherBottomOffset;
-        }
 
-        // الإعداد الأولي ومستمعي الأحداث
-        window.onload = function () {
-            showScreen(loadingSpinner); // إظهار شاشة التحميل فورًا
-            resizeCanvas(); // تعيين حجم لوحة الرسم الأولي
+            nav ul li {
+                margin: 0;
+            }
 
-            // محاكاة وقت التحميل
-            setTimeout(() => {
-                gameState = 'start';
-                showScreen(startScreen); // إظهار شاشة البداية بعد التحميل
-            }, 1000); // 1 ثانية تحميل
-        };
+            nav ul li a {
+                padding: 10px;
+            }
+            nav ul li a:hover {
+                transform: translateY(-3px) scale(1.01);
+            }
 
-        window.addEventListener('resize', resizeCanvas);
-        startGameButton.addEventListener('click', startGame);
-        restartGameButton.addEventListener('click', startGame); // إعادة تشغيل اللعبة من شاشة نهاية اللعبة
+            .container {
+                margin: 1.5rem auto;
+                padding: 0 1rem;
+            }
 
-        // تسجيل service worker لدعم PWA
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js');
-          });
-        }
-    </script>
-</body>
-</html>
+            section {
+                padding: 1.8rem;
+                margin-bottom: 1.8rem;
+                border-radius: 18px; /* زوايا أقل دائرية للجوال */
+            }
+            section::before, section::after {
+                display: none; /* إخفاء الأنماط الزخرفية الصغيرة في الجوال */
+            }
+
+            section h2 {
+                font-size: 1.6rem;
+                margin-bottom: 1.2rem;
+                padding-bottom: 10px;
+                border-bottom-width: 3px;
+            }
+
+            section p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            .hero-image {
+                max-height: 250px; /* تقليل ارتفاع الصورة في الجوال */
+                margin-bottom: 1.8rem;
+                border-radius: 18px;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr; /* عمود واحد في الجوالات */
+                gap: 18px;
+            }
+
+            .card {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            .card h3 {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+            .card .icon {
+                font-size: 2rem;
+            }
+
+            .button {
+                padding: 12px 25px;
+                font-size: 0.95rem;
+                margin-top: 1.2rem;
+            }
+            .button:hover {
+                transform: scale(1.05);
+            }
+
+            .results-list li {
+                padding: 1rem 1.2rem;
+                font-size: 0.95rem;
+                gap: 15px;
+                margin-bottom: 12px;
+                bo
