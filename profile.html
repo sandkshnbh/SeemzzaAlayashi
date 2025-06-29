@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seemzza Al-ayashi - البروفايل</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+    <div class="game-container">
+        <!-- شريط العنوان -->
+        <div class="game-header">
+            <h2>👤 البروفايل</h2>
+            <div class="user-info">
+                <span id="current-user"></span>
+                <button onclick="logout()" class="btn-logout">خروج</button>
+            </div>
+        </div>
+
+        <!-- معلومات البروفايل -->
+        <div class="profile-section">
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <span class="avatar-text" id="avatar-text"></span>
+                </div>
+                <h3 id="profile-username"></h3>
+                <p class="profile-date" id="profile-date"></p>
+            </div>
+            
+            <!-- الإحصائيات -->
+            <div class="stats-section">
+                <h3>إحصائيات اللعب</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="wins-count">0</div>
+                        <div class="stat-label">انتصارات</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="losses-count">0</div>
+                        <div class="stat-label">خسائر</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="win-rate">0%</div>
+                        <div class="stat-label">نسبة الفوز</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- الإعدادات -->
+            <div class="settings-section">
+                <h3>الإعدادات</h3>
+                <button onclick="changePassword()" class="btn-settings">تغيير كلمة المرور</button>
+                <button onclick="deleteAccount()" class="btn-settings btn-danger">حذف الحساب</button>
+            </div>
+        </div>
+
+        <!-- الشريط السفلي -->
+        <div class="bottom-nav">
+            <a href="game.html" class="nav-item">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-text">لعب</span>
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">بروفايل</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="supabase.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html> 

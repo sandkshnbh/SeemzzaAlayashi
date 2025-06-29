@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seemzza Al-ayashi - اللعبة</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+    <div class="game-container">
+        <!-- شريط العنوان -->
+        <div class="game-header">
+            <h2>🎮 Seemzza Al-ayashi</h2>
+            <div class="user-info">
+                <span id="current-user"></span>
+                <button onclick="logout()" class="btn-logout">خروج</button>
+            </div>
+        </div>
+
+        <!-- منطقة الدعوات -->
+        <div class="invite-section">
+            <h3>دعوة صديق للعب</h3>
+            <div class="invite-form">
+                <input type="text" id="friend-username" placeholder="اسم المستخدم">
+                <button onclick="sendInvite()" class="btn-invite">إرسال دعوة</button>
+            </div>
+            <div id="invite-status"></div>
+        </div>
+
+        <!-- منطقة اللعبة -->
+        <div class="game-section">
+            <div class="game-status">
+                <div id="game-info">اختر صديقًا للعب</div>
+                <div id="current-turn"></div>
+            </div>
+            
+            <div class="game-board">
+                <div class="board-row">
+                    <div class="cell" data-index="0" onclick="makeMove(0)"></div>
+                    <div class="cell" data-index="1" onclick="makeMove(1)"></div>
+                    <div class="cell" data-index="2" onclick="makeMove(2)"></div>
+                </div>
+                <div class="board-row">
+                    <div class="cell" data-index="3" onclick="makeMove(3)"></div>
+                    <div class="cell" data-index="4" onclick="makeMove(4)"></div>
+                    <div class="cell" data-index="5" onclick="makeMove(5)"></div>
+                </div>
+                <div class="board-row">
+                    <div class="cell" data-index="6" onclick="makeMove(6)"></div>
+                    <div class="cell" data-index="7" onclick="makeMove(7)"></div>
+                    <div class="cell" data-index="8" onclick="makeMove(8)"></div>
+                </div>
+            </div>
+            
+            <button onclick="resetGame()" class="btn-reset">لعبة جديدة</button>
+        </div>
+
+        <!-- الشريط السفلي -->
+        <div class="bottom-nav">
+            <a href="game.html" class="nav-item active">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-text">لعب</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">بروفايل</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="supabase.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 
