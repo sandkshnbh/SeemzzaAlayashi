@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seemzza Al-ayashi - البروفايل</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+    <div class="profile-modern-container">
+        <!-- زر الرجوع -->
+        <button class="profile-back-btn" onclick="window.location.href='game.html'">
+            <span>←</span>
+        </button>
+        <!-- صورة البروفايل واسم المستخدم -->
+        <div class="profile-modern-header">
+            <div class="profile-modern-avatar">
+                <span class="avatar-text" id="avatar-text"></span>
+            </div>
+            <div class="profile-modern-info">
+                <h1 id="profile-username" class="profile-modern-username">اسم المستخدم</h1>
+                <div class="profile-modern-role" id="profile-role">لاعب XO محترف</div>
+                <div class="profile-modern-status">
+                    <span class="profile-modern-badge">متاح للعب</span>
+                    <span class="profile-modern-icons">
+                        <span title="مفضل">★</span>
+                        <span title="نشط">●</span>
+                        <span title="إعجاب">👍</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- الإحصائيات -->
+        <div class="profile-modern-categories">
+            <div class="profile-modern-category">
+                <div class="category-number" id="wins-count">0</div>
+                <div class="category-label">انتصارات</div>
+            </div>
+            <div class="profile-modern-category">
+                <div class="category-number" id="losses-count">0</div>
+                <div class="category-label">خسائر</div>
+            </div>
+            <div class="profile-modern-category">
+                <div class="category-number" id="win-rate">0%</div>
+                <div class="category-label">نسبة الفوز</div>
+            </div>
+        </div>
+        <!-- معلومات إضافية -->
+        <div class="profile-modern-details">
+            <div class="profile-modern-detail">
+                <span class="detail-icon">🏆</span>
+                <span class="detail-text">أفضل إنجاز: <span id="best-achievement">-</span></span>
+            </div>
+            <div class="profile-modern-detail">
+                <span class="detail-icon">📅</span>
+                <span class="detail-text">آخر لعب: <span id="last-played">-</span></span>
+            </div>
+        </div>
+        <!-- زر رئيسي -->
+        <button class="profile-modern-main-btn" onclick="logout()">تسجيل الخروج</button>
+        <!-- الشريط السفلي -->
+        <div class="bottom-nav">
+            <a href="game.html" class="nav-item">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-text">لعب</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showRequests()">
+                <span class="nav-icon">📨</span>
+                <span class="nav-text">طلبات</span>
+                <span class="request-badge" id="request-badge" style="display: none;">0</span>
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">بروفايل</span>
+            </a>
+        </div>
+    </div>
+    <!-- نافذة طلبات اللعب -->
+    <div id="requests-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📨 طلبات اللعب</h3>
+                <button onclick="closeRequests()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="requests-list">
+                    <!-- سيتم ملء هذا القسم بالطلبات -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="supabase.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html> 
